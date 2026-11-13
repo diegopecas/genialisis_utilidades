@@ -12,7 +12,8 @@ require_once __DIR__ . '/ftp.service.php';
  *    - Back: solo las carpetas y archivos de primer nivel que se marcaron, sin lo excluido (uploads, logs...).
  * 2. Si se pidió respaldo, el servicio del hosting comprime lo que se va a reemplazar y se descarga a este equipo.
  * 3. Sube el zip por FTP a la carpeta entrantes del servicio de despliegues (utilidades.genialisis.com/despliegues).
- * 4. El servicio lo descomprime: en el front primero vacía el destino; en el back descomprime encima sin borrar nada.
+ * 4. El servicio lo descomprime: en el front primero vacía el destino; en el back primero vacía solo las carpetas que se marcaron,
+ *    sin tocar lo excluido. Nunca se borra la carpeta del destino, solo su contenido.
  */
 class DesplieguesService
 {

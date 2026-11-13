@@ -5,7 +5,9 @@
  *
  * - Front: borra el contenido del destino (menos lo protegido y las subcarpetas que sean otro destino)
  *   y descomprime el zip completo.
- * - Back: descomprime encima, sin borrar nada, así lo que solo existe en el servidor (logs, uploads) queda intacto.
+ * - Back: vacía solo las carpetas de primer nivel que vienen en el zip, sin tocar lo excluido (logs, uploads...),
+ *   y descomprime. Las demás carpetas y archivos del destino no se tocan.
+ * En ningún caso se borra la carpeta del destino: solo su contenido, así el dominio sigue apuntando igual.
  * - Respaldo: comprime lo que se va a reemplazar para que la herramienta lo descargue.
  *
  * Solo trabaja sobre los destinos de config/config.php; nunca sobre otras carpetas del hosting.
@@ -190,10 +192,9 @@ class DesplieguesService
                 throw new RuntimeException('No se pudo crear la carpeta del destino.', 500);
             }
 
-            $borrados = 0;
-            if ($tipo === 'front') {
-                $borrados = $this->vaciarFront($destino, $base);
-            }
+            $borrados = $tipo === 'front'
+                ? $this->vaciarFront($destino, $base)
+                : $this->vaciarCarpetasBack($base, $entradas);
 
             if (!$zip->extractTo($base, $entradas)) {
                 throw new RuntimeException('No se pudo descomprimir en el destino.', 500);
@@ -221,6 +222,47 @@ class DesplieguesService
                 continue;
             }
             $borrados += $this->borrar($base . '/' . $nombre, $nombre, $anidados);
+        }
+        return $borrados;
+    }
+
+    /**
+     * Back: vacía las carpetas de primer nivel que trae el zip, menos lo excluido (logs, uploads...).
+     * La carpeta en sí no se borra; los archivos sueltos de primer nivel simplemente se sobrescriben.
+     */
+    private function vaciarCarpetasBack(string $base, array $entradas): int
+    {
+        $carpetas = [];
+        foreach ($entradas as $entrada) {
+            $corte = strpos($entrada, '/');
+            if ($corte !== false) {
+                $carpetas[substr($entrada, 0, $corte)] = true;
+            }
+        }
+        $borrados = 0;
+        foreach (array_keys($carpetas) as $carpeta) {
+            if (is_dir($base . '/' . $carpeta) && !is_link($base . '/' . $carpeta)) {
+                $borrados += $this->vaciarBack($base . '/' . $carpeta, $carpeta);
+            }
+        }
+        return $borrados;
+    }
+
+    private function vaciarBack(string $ruta, string $rel): int
+    {
+        $borrados = 0;
+        foreach (array_diff(scandir($ruta), ['.', '..']) as $hijo) {
+            $relHijo = $rel . '/' . $hijo;
+            if (!$this->rutaValida($relHijo, 'back')) {
+                continue;
+            }
+            $rutaHijo = $ruta . '/' . $hijo;
+            if (is_dir($rutaHijo) && !is_link($rutaHijo)) {
+                $borrados += $this->vaciarBack($rutaHijo, $relHijo);
+                @rmdir($rutaHijo);
+            } elseif (@unlink($rutaHijo)) {
+                $borrados++;
+            }
         }
         return $borrados;
     }

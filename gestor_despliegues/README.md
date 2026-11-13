@@ -1,4 +1,4 @@
-# Gestor de Bases de Datos
+# Gestor de Despliegues
 
 Herramienta local para ejecutar scripts SQL en varias bases y sacar copias `.sql.gz`, con las conexiones definidas en `config/conexiones.json`.
 

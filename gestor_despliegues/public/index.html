@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Gestor de Bases de Datos</title>
+    <title>Gestor de Despliegues</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="vendor/material-icons/material-icons.css">
     <link rel="stylesheet" href="vendor/materialize/materialize.min.css">
@@ -13,7 +13,7 @@
     <header class="barra">
         <div class="barra-contenido">
             <i class="material-icons dorado">storage</i>
-            <span class="barra-titulo">Gestor de Bases de Datos</span>
+            <span class="barra-titulo">Gestor de Despliegues</span>
             <div class="menu-principal">
                 <button class="menu-opcion activa" data-seccion="seccion-bd"><i class="material-icons">dns</i>Bases de datos</button>
                 <button class="menu-opcion" data-seccion="seccion-despliegues"><i class="material-icons">cloud_upload</i>Despliegues</button>
@@ -136,7 +136,7 @@
                     <div class="tarjeta-encabezado">
                         <h6><i class="material-icons dorado">fact_check</i> Preparar y desplegar</h6>
                     </div>
-                    <p class="texto-suave">El front se reemplaza completo. En el back marca las carpetas o archivos que quieres subir; arriba no se borra nada. No se toca el servidor hasta que confirmes.</p>
+                    <p class="texto-suave">El front se reemplaza completo. En el back marca las carpetas o archivos que quieres subir: esas carpetas se vacían arriba antes de subirlas (sin tocar logs ni uploads) y lo demás queda igual. No se toca el servidor hasta que confirmes.</p>
                     <button id="dep-btn-revisar" class="btn btn-dorado btn-ancho" disabled>
                         <i class="material-icons left">playlist_add_check</i>Preparar los destinos seleccionados
                     </button>
