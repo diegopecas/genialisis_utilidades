@@ -1,0 +1,29 @@
+{
+    "dbeaver": {
+        "carpeta": "%APPDATA%\\DBeaverData\\workspace6\\General\\.dbeaver",
+        "archivo_conexiones": "data-sources.json",
+        "archivo_credenciales": "credentials-config.json"
+    },
+    "carpeta_copias": "copias",
+    "carpeta_logs": "logs",
+    "carpeta_despliegues": "despliegues",
+    "ocultar_carpetas": [],
+    "ocultar_conexiones": [],
+    "agrupacion": {
+        "ambientes": ["Prod", "QA", "Demo", "Local"],
+        "conexiones": {
+            "mysql8-197c91bd156-e5c7d7d2de8b094": { "nombre": "secretaria", "proyecto": "Secretaría", "ambiente": "Prod" },
+            "mysql8-19a4aecd4cf-2fc75903102792db": { "nombre": "genialisis-wallet-prod", "proyecto": "Wallet" },
+            "mysql8-19a5a6aca26-4dbdbfddf4ddaabc": { "nombre": "placemy-prod", "proyecto": "PlaceMy" },
+            "mysql8-194be2710fc-1d73dbc18ec283fd": { "nombre": "lumen_academico_prod", "ocultar": true },
+            "mysql8-19a4cc58f65-44c8cb15d141e276": { "nombre": "lumen_prod", "ocultar": true },
+            "mysql8-19cf957dee8-50e24dd1130e00b2": { "nombre": "admin-psyncronia (servidor viejo 92.205.2.161)", "ocultar": true },
+            "mysql8-1a130d1cbc1-a4ca7421f9189ae": { "nombre": "admin-b-admin-master-local", "ocultar": true },
+            "mysql8-1a130d73e9f-d68f212f180eb5b": { "nombre": "admin_b_admin_local", "ocultar": true }
+        }
+    },
+    "copias": {
+        "filas_por_insert": 500,
+        "nivel_gzip": 6
+    }
+}

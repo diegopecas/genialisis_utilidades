@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestor de Bases de Datos</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="vendor/material-icons/material-icons.css">
+    <link rel="stylesheet" href="vendor/materialize/materialize.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    <header class="barra">
+        <div class="barra-contenido">
+            <i class="material-icons dorado">storage</i>
+            <span class="barra-titulo">Gestor de Bases de Datos</span>
+            <div class="menu-principal">
+                <button class="menu-opcion activa" data-seccion="seccion-bd"><i class="material-icons">dns</i>Bases de datos</button>
+                <button class="menu-opcion" data-seccion="seccion-despliegues"><i class="material-icons">cloud_upload</i>Despliegues</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="contenedor">
+        <div id="alerta-diagnostico" class="tarjeta alerta oculto"></div>
+
+        <section id="seccion-bd" class="row">
+            <!-- Selección de bases -->
+            <div class="col s12 l5">
+                <div class="tarjeta">
+                    <div class="tarjeta-encabezado">
+                        <h6><i class="material-icons dorado">dns</i> Bases de datos</h6>
+                        <span id="contador-seleccion" class="chip-suave">0 seleccionadas</span>
+                    </div>
+                    <div class="input-field buscador">
+                        <i class="material-icons prefix">search</i>
+                        <input id="buscador" type="text" autocomplete="off">
+                        <label for="buscador">Buscar base o proyecto</label>
+                    </div>
+                    <div id="filtro-ambientes" class="filtro-ambientes"></div>
+                    <div class="acciones-seleccion">
+                        <button id="btn-expandir" class="btn-flat btn-pequeno">Expandir todo</button>
+                        <button id="btn-contraer" class="btn-flat btn-pequeno">Contraer todo</button>
+                        <button id="btn-limpiar" class="btn-flat btn-pequeno">Limpiar selección</button>
+                        <button id="btn-recargar" class="btn-flat btn-pequeno"><i class="material-icons left">refresh</i>Recargar</button>
+                    </div>
+                    <div id="arbol" class="arbol">
+                        <div class="cargando">Cargando conexiones...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="col s12 l7">
+                <div class="tarjeta">
+                    <ul class="tabs" id="pestanas">
+                        <li class="tab col s6"><a class="active" href="#tab-ejecutar">Ejecutar script</a></li>
+                        <li class="tab col s6"><a href="#tab-copias">Copias</a></li>
+                    </ul>
+
+                    <div id="tab-ejecutar" class="tab-contenido">
+                        <div class="file-field input-field">
+                            <div class="btn btn-dorado">
+                                <span>Script .sql</span>
+                                <input id="archivo-script" type="file" accept=".sql,.txt">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path" type="text" placeholder="Selecciona el archivo">
+                            </div>
+                        </div>
+                        <p id="info-script" class="texto-suave"></p>
+
+                        <div class="opciones">
+                            <div class="switch">
+                                <label>
+                                    <input id="opt-respaldo" type="checkbox">
+                                    <span class="lever"></span>
+                                    Sacar copia de cada base antes de ejecutar
+                                </label>
+                            </div>
+                            <div class="switch">
+                                <label>
+                                    <input id="opt-detener" type="checkbox" checked>
+                                    <span class="lever"></span>
+                                    Detener todo si una base falla
+                                </label>
+                            </div>
+                        </div>
+
+                        <button id="btn-ejecutar" class="btn btn-dorado btn-ancho" disabled>
+                            <i class="material-icons left">play_arrow</i>Ejecutar en las bases seleccionadas
+                        </button>
+                        <ul id="resultados-ejecucion" class="resultados"></ul>
+                    </div>
+
+                    <div id="tab-copias" class="tab-contenido">
+                        <p class="texto-suave">Genera un archivo <b>.sql.gz</b> por cada base seleccionada en la carpeta <span id="ruta-copias">copias</span>.</p>
+                        <button id="btn-copias" class="btn btn-dorado btn-ancho" disabled>
+                            <i class="material-icons left">archive</i>Sacar copias de las bases seleccionadas
+                        </button>
+                        <ul id="resultados-copias" class="resultados"></ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="seccion-despliegues" class="row oculto">
+            <!-- Selección de destinos -->
+            <div class="col s12 l5">
+                <div class="tarjeta">
+                    <div class="tarjeta-encabezado">
+                        <h6><i class="material-icons dorado">cloud_upload</i> Destinos</h6>
+                        <span id="dep-contador" class="chip-suave">0 seleccionados</span>
+                    </div>
+                    <div class="input-field buscador">
+                        <i class="material-icons prefix">search</i>
+                        <input id="dep-buscador" type="text" autocomplete="off">
+                        <label for="dep-buscador">Buscar sitio o proyecto</label>
+                    </div>
+                    <div id="dep-filtro-ambientes" class="filtro-ambientes"></div>
+                    <div class="acciones-seleccion">
+                        <button id="dep-expandir" class="btn-flat btn-pequeno">Expandir todo</button>
+                        <button id="dep-contraer" class="btn-flat btn-pequeno">Contraer todo</button>
+                        <button id="dep-limpiar" class="btn-flat btn-pequeno">Limpiar selección</button>
+                        <button id="dep-recargar" class="btn-flat btn-pequeno"><i class="material-icons left">refresh</i>Recargar</button>
+                    </div>
+                    <div id="dep-arbol" class="arbol">
+                        <div class="cargando">Cargando destinos...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preparación y despliegue -->
+            <div class="col s12 l7">
+                <div class="tarjeta">
+                    <div class="tarjeta-encabezado">
+                        <h6><i class="material-icons dorado">fact_check</i> Preparar y desplegar</h6>
+                    </div>
+                    <p class="texto-suave">El front se reemplaza completo. En el back marca las carpetas o archivos que quieres subir; arriba no se borra nada. No se toca el servidor hasta que confirmes.</p>
+                    <button id="dep-btn-revisar" class="btn btn-dorado btn-ancho" disabled>
+                        <i class="material-icons left">playlist_add_check</i>Preparar los destinos seleccionados
+                    </button>
+                    <div id="dep-revision" class="revision"></div>
+                    <div class="opciones">
+                        <div class="switch">
+                            <label>
+                                <input id="dep-opt-respaldo" type="checkbox">
+                                <span class="lever"></span>
+                                Respaldar en este equipo lo que se va a reemplazar
+                            </label>
+                        </div>
+                    </div>
+                    <button id="dep-btn-desplegar" class="btn btn-dorado btn-ancho oculto">
+                        <i class="material-icons left">cloud_upload</i>Desplegar
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Confirmación de ejecución -->
+    <div id="modal-confirmar" class="modal">
+        <div class="modal-content">
+            <h5>Confirmar ejecución</h5>
+            <p id="confirmar-resumen"></p>
+            <div id="confirmar-mezcla" class="aviso-mezcla oculto"></div>
+            <ul id="confirmar-lista" class="lista-confirmar"></ul>
+            <p id="confirmar-pregunta" class="oculto"><b>Hay bases de producción. ¿Quieres sacar copia antes de ejecutar?</b></p>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-close btn-flat">Cancelar</button>
+            <button id="btn-sin-copia" class="btn-flat oculto">No, ejecutar sin copia</button>
+            <button id="btn-confirmar" class="btn btn-dorado">Ejecutar</button>
+        </div>
+    </div>
+
+    <!-- Confirmación de despliegue -->
+    <div id="modal-desplegar" class="modal">
+        <div class="modal-content">
+            <h5>Confirmar despliegue</h5>
+            <p id="dep-confirmar-resumen"></p>
+            <div id="dep-confirmar-mezcla" class="aviso-mezcla oculto"></div>
+            <ul id="dep-confirmar-lista" class="lista-confirmar"></ul>
+            <p id="dep-confirmar-pregunta" class="oculto"><b>Hay destinos de producción. ¿Quieres respaldar antes de desplegar?</b></p>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-close btn-flat">Cancelar</button>
+            <button id="dep-btn-sin-respaldo" class="btn-flat oculto">No, desplegar sin respaldo</button>
+            <button id="dep-btn-confirmar" class="btn btn-dorado">Desplegar</button>
+        </div>
+    </div>
+
+    <script src="vendor/materialize/materialize.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/despliegues.js"></script>
+</body>
+</html>
