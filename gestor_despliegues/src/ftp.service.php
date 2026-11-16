@@ -14,19 +14,61 @@ class FtpService
         if (!function_exists('ftp_connect')) {
             throw new RuntimeException('Falta activar la extensión ftp en el php.ini');
         }
+        // Un reintento con conexión nueva: el FTP de GoDaddy a veces corta el inicio de sesión por un momento
+        $error = '';
+        for ($intento = 1; $intento <= 2; $intento++) {
+            if ($intento > 1) {
+                sleep(5);
+            }
+            $error = $this->conectar($cfg);
+            if ($error === '') {
+                break;
+            }
+        }
+        if ($error !== '') {
+            throw new RuntimeException($error);
+        }
+        ftp_pasv($this->conexion, !isset($cfg['pasivo']) || $cfg['pasivo']);
+        ftp_set_option($this->conexion, FTP_TIMEOUT_SEC, 120);
+    }
+
+    /**
+     * Abre la conexión e inicia sesión.
+     * Devuelve '' si todo salió bien, o el mensaje de error con lo que respondió el servidor.
+     */
+    private function conectar(array $cfg): string
+    {
         $host = (string) $cfg['host'];
         $puerto = (int) ($cfg['puerto'] ?? 21);
+        error_clear_last();
         $this->conexion = !empty($cfg['tls'])
             ? @ftp_ssl_connect($host, $puerto, 30)
             : @ftp_connect($host, $puerto, 30);
         if (!$this->conexion) {
-            throw new RuntimeException('No se pudo conectar al FTP ' . $host . ':' . $puerto);
+            $this->conexion = null;
+            return 'No se pudo conectar al FTP ' . $host . ':' . $puerto . $this->detalleError();
         }
+        error_clear_last();
         if (!@ftp_login($this->conexion, (string) $cfg['usuario'], (string) $cfg['clave'])) {
-            throw new RuntimeException('El FTP rechazó el usuario o la clave');
+            $detalle = $this->detalleError();
+            @ftp_close($this->conexion);
+            $this->conexion = null;
+            return 'El FTP no aceptó el inicio de sesión' . $detalle;
         }
-        ftp_pasv($this->conexion, !isset($cfg['pasivo']) || $cfg['pasivo']);
-        ftp_set_option($this->conexion, FTP_TIMEOUT_SEC, 120);
+        return '';
+    }
+
+    /**
+     * Mensaje del último aviso de PHP (ahí queda la respuesta real del servidor FTP).
+     */
+    private function detalleError(): string
+    {
+        $ultimo = error_get_last();
+        if (!$ultimo || empty($ultimo['message'])) {
+            return '';
+        }
+        $mensaje = trim(preg_replace('/^ftp_\w+\(\):\s*/', '', (string) $ultimo['message']));
+        return $mensaje === '' ? '' : ' (' . $mensaje . ')';
     }
 
     public function __destruct()
