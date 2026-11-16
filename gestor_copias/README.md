@@ -1,10 +1,10 @@
-# Gestor de Despliegues
+# Gestor de Copias
 
-Herramienta local para ejecutar scripts SQL en varias bases y sacar copias `.sql.gz`, con las conexiones definidas en `config/conexiones.json`.
+Herramienta local para ejecutar scripts SQL en varias bases, sacar copias `.sql.gz` de las bases (conexiones en `config/conexiones.json`) y sacar copias `.zip` de los fuentes de los proyectos de este equipo (en `copias/proyectos`).
 
 ## Requisitos
 
-- PHP 7.4 o superior con las extensiones `pdo_mysql`, `openssl`, `zlib` y `mbstring` activas en el `php.ini`.
+- PHP 7.4 o superior con las extensiones `pdo_mysql`, `openssl`, `zlib`, `mbstring` y `zip` activas en el `php.ini`.
 
 ## Correr en local
 
@@ -26,7 +26,7 @@ Abrir `http://localhost:8473` en el navegador. Para detener el servidor: Ctrl + 
 
 `config/conexiones.json`: conexiones organizadas por proyecto y tipo (Master, Tenants, Auditoría), con base, ambiente, host, puerto, usuario y clave. Solo debe estar en este equipo.
 
-`config/despliegues.json`: conexión FTP, reglas de exclusión y destinos (carpeta local de origen → carpeta en el servidor). Solo debe estar en este equipo. Requiere la extensión `ftp` activa en el `php.ini`.
+`config/proyectos.json`: proyectos por producto (nombre, tipo y carpeta raíz), carpetas y archivos que nunca entran al zip (`excluir`) y los de configuración del primer nivel que solo entran si se marca "Incluir configuración" (`configuracion`).
 
 `config/config.json`: carpetas de copias y logs, orden de los ambientes, y filas por INSERT / nivel de compresión de las copias.
 

@@ -144,6 +144,26 @@ class CopiasService
         ];
     }
 
+    /**
+     * Abre el Explorador de Windows con la copia seleccionada.
+     */
+    public static function abrirCarpeta(string $nombreArchivo): array
+    {
+        // Solo se aceptan copias .sql.gz de la carpeta de copias, sin rutas ni comillas
+        if ($nombreArchivo !== basename($nombreArchivo) || !preg_match('/^[A-Za-z0-9_\-\.]+\.sql\.gz$/', $nombreArchivo)) {
+            throw new InvalidArgumentException('Nombre de archivo no válido');
+        }
+        $archivo = ConfigService::carpeta('carpeta_copias') . DIRECTORY_SEPARATOR . $nombreArchivo;
+        if (!is_file($archivo)) {
+            throw new RuntimeException('No existe el archivo ' . $archivo);
+        }
+        if (stripos(PHP_OS_FAMILY, 'Windows') === false) {
+            throw new RuntimeException('Abrir la carpeta solo funciona en Windows. El archivo está en ' . $archivo);
+        }
+        pclose(popen('start "" explorer.exe /select,"' . $archivo . '"', 'r'));
+        return ['ok' => true];
+    }
+
     private static function escribirTabla($gz, PDO $meta, PDO $datos, string $tabla, array $columnas, int $filasPorInsert): void
     {
         $nombre = self::id($tabla);

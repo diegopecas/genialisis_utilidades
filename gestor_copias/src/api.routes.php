@@ -5,7 +5,7 @@ require_once __DIR__ . '/conexiones.service.php';
 require_once __DIR__ . '/conexion.service.php';
 require_once __DIR__ . '/ejecucion.service.php';
 require_once __DIR__ . '/copias.service.php';
-require_once __DIR__ . '/despliegues.service.php';
+require_once __DIR__ . '/proyectos.service.php';
 
 set_time_limit(0);
 ini_set('memory_limit', '1024M');
@@ -20,9 +20,10 @@ date_default_timezone_set('America/Bogota');
  * POST /api/analizar     { script }
  * POST /api/ejecutar     { id, script, lote, nombre_script }
  * POST /api/copia        { id, sufijo }
- * GET  /api/despliegues  Destinos de config/despliegues.json (sin credenciales)
- * POST /api/despliegue/contenido { id }  Lo que se va a subir (front: totales; back: primer nivel por fecha)
- * POST /api/despliegue/ejecutar  { id, rutas: [primer nivel, solo back], respaldar: bool }
+ * POST /api/copia/abrir  { archivo }  Abre el Explorador con la copia seleccionada
+ * GET  /api/proyectos   Proyectos de config/proyectos.json
+ * POST /api/proyectos/copia  { ids: [producto|nombre], incluir_config: bool }  Un zip en copias/proyectos
+ * POST /api/proyectos/abrir  { archivo }  Abre el Explorador con el zip seleccionado
  */
 function responder(int $codigo, array $datos): void
 {
@@ -48,11 +49,11 @@ function requerido(array $datos, string $campo): string
 function diagnostico(): array
 {
     $extensiones = [];
-    foreach (['pdo_mysql', 'openssl', 'zlib', 'mbstring', 'ftp', 'zip'] as $ext) {
+    foreach (['pdo_mysql', 'openssl', 'zlib', 'mbstring', 'zip'] as $ext) {
         $extensiones[$ext] = extension_loaded($ext);
     }
     $carpetas = [];
-    foreach (['carpeta_copias', 'carpeta_logs', 'carpeta_despliegues'] as $clave) {
+    foreach (['carpeta_copias', 'carpeta_logs'] as $clave) {
         try {
             $ruta = ConfigService::carpeta($clave);
             $carpetas[$clave] = ['ruta' => $ruta, 'escritura' => is_writable($ruta)];
@@ -106,27 +107,31 @@ try {
             ));
             break;
 
-        case 'GET /api/despliegues':
-            responder(200, ['despliegues' => DesplieguesService::listar()]);
+        case 'GET /api/proyectos':
+            responder(200, ['proyectos' => ProyectosService::listar(), 'carpeta' => ProyectosService::carpetaCopias()]);
             break;
 
-        case 'POST /api/despliegue/contenido':
+        case 'POST /api/proyectos/copia':
             $datos = cuerpo();
-            responder(200, DesplieguesService::contenido(requerido($datos, 'id')));
-            break;
-
-        case 'POST /api/despliegue/ejecutar':
-            $datos = cuerpo();
-            responder(200, DesplieguesService::ejecutar(
-                requerido($datos, 'id'),
-                array_map('strval', (array) ($datos['rutas'] ?? [])),
-                !empty($datos['respaldar'])
+            responder(200, ProyectosService::copiar(
+                array_map('strval', (array) ($datos['ids'] ?? [])),
+                !empty($datos['incluir_config'])
             ));
+            break;
+
+        case 'POST /api/proyectos/abrir':
+            $datos = cuerpo();
+            responder(200, ProyectosService::abrirCarpeta(requerido($datos, 'archivo')));
             break;
 
         case 'POST /api/copia':
             $datos = cuerpo();
             responder(200, CopiasService::generar(requerido($datos, 'id'), (string) ($datos['sufijo'] ?? '')));
+            break;
+
+        case 'POST /api/copia/abrir':
+            $datos = cuerpo();
+            responder(200, CopiasService::abrirCarpeta(requerido($datos, 'archivo')));
             break;
 
         default:

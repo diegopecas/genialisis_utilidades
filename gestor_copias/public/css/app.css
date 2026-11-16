@@ -62,7 +62,7 @@ body {
 .menu-opcion.activa, .menu-opcion.activa:focus { background: var(--dorado); border-color: var(--dorado); color: #fff; }
 .menu-opcion.activa .material-icons { color: #fff; }
 
-/* Revisión de despliegues */
+/* Tipo de proyecto (front/back) */
 .etiqueta-tipo {
     border-radius: 8px;
     font-size: 0.7rem;
@@ -71,50 +71,6 @@ body {
     background: var(--dorado-suave);
     color: var(--dorado-oscuro);
 }
-.revision { margin-top: 16px; }
-.revision-destino {
-    background: rgba(255, 255, 255, 0.6);
-    border-left: 4px solid var(--dorado-suave);
-    border-radius: 10px;
-    padding: 10px 12px;
-    margin-bottom: 10px;
-}
-.revision-destino.ok { border-left-color: var(--verde); }
-.revision-destino.error { border-left-color: var(--rosa); }
-.revision-destino pre {
-    white-space: pre-wrap;
-    background: rgba(246, 193, 193, 0.2);
-    border-radius: 6px;
-    padding: 6px 8px;
-    font-size: 0.78rem;
-    max-height: 160px;
-    overflow: auto;
-}
-.revision-encabezado { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
-.revision-estado { margin-left: auto; display: flex; align-items: center; gap: 4px; font-size: 0.85rem; color: var(--texto-suave); }
-.revision-destino.ok .revision-estado .material-icons { color: var(--verde-texto); }
-.revision-destino.error .revision-estado .material-icons { color: var(--rosa-texto); }
-.seccion-revision { margin-top: 8px; }
-.seccion-revision summary { display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 500; list-style: none; }
-.seccion-revision summary::-webkit-details-marker { display: none; }
-.seccion-revision summary .material-icons { font-size: 20px; color: var(--dorado); }
-.seccion-revision summary label { margin: 0; }
-.seccion-revision summary [type="checkbox"] + span:not(.lever) { padding-left: 26px; height: 20px; }
-.seccion-externos summary .material-icons, .seccion-borrar summary .material-icons { color: var(--rosa-texto); }
-.conteo-seccion { color: var(--texto-suave); font-weight: 400; }
-.lista-archivos { max-height: 260px; overflow-y: auto; padding: 4px 0 4px 30px; }
-.lista-archivos .archivo { display: block; padding: 2px 0; }
-.lista-archivos .archivo [type="checkbox"] + span:not(.lever) { color: var(--texto); font-size: 0.85rem; line-height: 20px; height: auto; overflow-wrap: anywhere; }
-.archivo-motivo { margin-left: 8px; font-size: 0.75rem; color: var(--texto-suave); }
-
-/* Preparación del despliegue: elementos de primer nivel del back y nota del front */
-.lista-elementos { max-height: 320px; overflow-y: auto; padding: 4px 0 4px 8px; }
-.elemento-back { display: block; padding: 3px 0; }
-.elemento-back [type="checkbox"] + span:not(.lever) { color: var(--texto); font-size: 0.9rem; line-height: 20px; height: auto; overflow-wrap: anywhere; }
-.elemento-back .material-icons { font-size: 18px; color: var(--dorado); vertical-align: -4px; margin-right: 4px; }
-.etiqueta-config { margin-left: 6px; padding: 0 6px; border-radius: 8px; font-size: 0.7rem; background: var(--rosa); color: var(--rosa-texto); }
-.nota-front { display: flex; align-items: center; gap: 6px; margin: 6px 0 2px; }
-.nota-front .material-icons { color: var(--dorado); font-size: 20px; }
 
 .contenedor { padding: 20px 12px; max-width: 1400px; margin: 0 auto; }
 
@@ -281,6 +237,7 @@ body {
 .resultado-cuerpo { flex: 1; min-width: 0; }
 .resultado-titulo { font-weight: 500; }
 .resultado-detalle { font-size: 0.85rem; color: var(--texto-suave); word-break: break-word; }
+.pro-btn-abrir, .btn-abrir-copia { margin-top: 6px; padding-left: 0; }
 .resultado pre {
     white-space: pre-wrap;
     word-break: break-word;

@@ -1,0 +1,57 @@
+{
+    "excluir": [
+        "node_modules",
+        "dist",
+        ".angular",
+        ".git",
+        ".vscode",
+        "vendor",
+        "uploads",
+        "logs",
+        "cache",
+        "galeria_privada",
+        "assets",
+        "DB",
+        "*.log",
+        "error_log"
+    ],
+    "configuracion": [
+        "config",
+        "config_*",
+        ".env",
+        ".env.*",
+        "env.php"
+    ],
+    "proyectos": {
+        "Breakeat": [
+            { "nombre": "breakeat_front", "tipo": "front", "ruta": "C:\\Proyectos\\Breakeat\\breakeat_front" },
+            { "nombre": "breakeat_portal_front", "tipo": "front", "ruta": "C:\\Proyectos\\Breakeat\\breakeat_portal_front" },
+            { "nombre": "breakeat_back", "tipo": "back", "ruta": "C:\\xampp\\htdocs\\breakeat_back" }
+        ],
+        "Genialisis Academico": [
+            { "nombre": "genialisis_academico_front", "tipo": "front", "ruta": "C:\\Proyectos\\Genialisis\\genialisis_academico_front" },
+            { "nombre": "genialisis_acudientes_academico_front", "tipo": "front", "ruta": "C:\\Proyectos\\Genialisis\\genialisis_acudientes_academico_front" },
+            { "nombre": "genialisis_academico_back", "tipo": "back", "ruta": "C:\\xampp\\htdocs\\genialisis_academico_back" }
+        ],
+        "Genialisis Admin": [
+            { "nombre": "genialisis_admin_front", "tipo": "front", "ruta": "C:\\Proyectos\\Genialisis\\genialisis_admin_front" },
+            { "nombre": "genialisis_admin_back", "tipo": "back", "ruta": "C:\\xampp\\htdocs\\genialisis_admin_back" }
+        ],
+        "Genialisis Portales": [
+            { "nombre": "genialisis_sporttennis", "tipo": "front", "ruta": "C:\\Proyectos\\Genialisis\\genialisis_sporttennis" },
+            { "nombre": "genialisis_portales_back", "tipo": "back", "ruta": "C:\\xampp\\htdocs\\genialisis_portales_back" }
+        ],
+        "Genialisis Portal": [
+            { "nombre": "genialisis_portal_front", "tipo": "front", "ruta": "C:\\Proyectos\\Genialisis\\genialisis_portal_front" },
+            { "nombre": "genialisis_portal_back", "tipo": "back", "ruta": "C:\\xampp\\htdocs\\genialisis_portal_back" }
+        ],
+        "Genialisis Wallet": [
+            { "nombre": "genialisis_wallet_front", "tipo": "front", "ruta": "C:\\Proyectos\\Genialisis\\genialisis_wallet_front" },
+            { "nombre": "genialisis_wallet_back", "tipo": "back", "ruta": "C:\\xampp\\htdocs\\genialisis_wallet_back" }
+        ],
+        "Psycronia": [
+            { "nombre": "psyncronia-front", "tipo": "front", "ruta": "C:\\Proyectos\\Psyncronia\\psyncronia-front" },
+            { "nombre": "psyncronia-back", "tipo": "back", "ruta": "C:\\xampp\\htdocs\\psyncronia-back" }
+        ]
+    }
+}

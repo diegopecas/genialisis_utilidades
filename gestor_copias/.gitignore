@@ -1,0 +1,13 @@
+# Conexiones con usuarios y claves: solo en este equipo
+config/conexiones.json
+
+# Copias de bases y de proyectos, y logs de ejecución (la herramienta crea las carpetas si no existen)
+copias/
+logs/
+
+# Clave secreta y contraseña de carpeta del servicio de copias del hosting
+config/copias-remotas.json
+
+# Archivos del despliegue que ya no se usa (tienen la clave del FTP): borrarlos del equipo
+config/despliegues.json
+despliegues/

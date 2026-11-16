@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Gestor de Despliegues</title>
+    <title>Gestor de Copias</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="vendor/material-icons/material-icons.css">
     <link rel="stylesheet" href="vendor/materialize/materialize.min.css">
@@ -12,11 +12,11 @@
 <body>
     <header class="barra">
         <div class="barra-contenido">
-            <i class="material-icons dorado">storage</i>
-            <span class="barra-titulo">Gestor de Despliegues</span>
+            <i class="material-icons dorado">inventory_2</i>
+            <span class="barra-titulo">Gestor de Copias</span>
             <div class="menu-principal">
                 <button class="menu-opcion activa" data-seccion="seccion-bd"><i class="material-icons">dns</i>Bases de datos</button>
-                <button class="menu-opcion" data-seccion="seccion-despliegues"><i class="material-icons">cloud_upload</i>Despliegues</button>
+                <button class="menu-opcion" data-seccion="seccion-proyectos"><i class="material-icons">folder_copy</i>Proyectos</button>
             </div>
         </div>
     </header>
@@ -104,55 +104,51 @@
             </div>
         </section>
 
-        <section id="seccion-despliegues" class="row oculto">
-            <!-- Selección de destinos -->
+        <section id="seccion-proyectos" class="row oculto">
+            <!-- Selección de proyectos -->
             <div class="col s12 l5">
                 <div class="tarjeta">
                     <div class="tarjeta-encabezado">
-                        <h6><i class="material-icons dorado">cloud_upload</i> Destinos</h6>
-                        <span id="dep-contador" class="chip-suave">0 seleccionados</span>
+                        <h6><i class="material-icons dorado">folder_copy</i> Proyectos</h6>
+                        <span id="pro-contador" class="chip-suave">0 seleccionados</span>
                     </div>
                     <div class="input-field buscador">
                         <i class="material-icons prefix">search</i>
-                        <input id="dep-buscador" type="text" autocomplete="off">
-                        <label for="dep-buscador">Buscar sitio o proyecto</label>
+                        <input id="pro-buscador" type="text" autocomplete="off">
+                        <label for="pro-buscador">Buscar proyecto o producto</label>
                     </div>
-                    <div id="dep-filtro-ambientes" class="filtro-ambientes"></div>
                     <div class="acciones-seleccion">
-                        <button id="dep-expandir" class="btn-flat btn-pequeno">Expandir todo</button>
-                        <button id="dep-contraer" class="btn-flat btn-pequeno">Contraer todo</button>
-                        <button id="dep-limpiar" class="btn-flat btn-pequeno">Limpiar selección</button>
-                        <button id="dep-recargar" class="btn-flat btn-pequeno"><i class="material-icons left">refresh</i>Recargar</button>
+                        <button id="pro-expandir" class="btn-flat btn-pequeno">Expandir todo</button>
+                        <button id="pro-contraer" class="btn-flat btn-pequeno">Contraer todo</button>
+                        <button id="pro-limpiar" class="btn-flat btn-pequeno">Limpiar selección</button>
+                        <button id="pro-recargar" class="btn-flat btn-pequeno"><i class="material-icons left">refresh</i>Recargar</button>
                     </div>
-                    <div id="dep-arbol" class="arbol">
-                        <div class="cargando">Cargando destinos...</div>
+                    <div id="pro-arbol" class="arbol">
+                        <div class="cargando">Cargando proyectos...</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Preparación y despliegue -->
+            <!-- Copia de proyectos -->
             <div class="col s12 l7">
                 <div class="tarjeta">
                     <div class="tarjeta-encabezado">
-                        <h6><i class="material-icons dorado">fact_check</i> Preparar y desplegar</h6>
+                        <h6><i class="material-icons dorado">inventory_2</i> Copia de proyectos</h6>
                     </div>
-                    <p class="texto-suave">El front se reemplaza completo. En el back marca las carpetas o archivos que quieres subir: esas carpetas se vacían arriba antes de subirlas (sin tocar logs ni uploads) y lo demás queda igual. No se toca el servidor hasta que confirmes.</p>
-                    <button id="dep-btn-revisar" class="btn btn-dorado btn-ancho" disabled>
-                        <i class="material-icons left">playlist_add_check</i>Preparar los destinos seleccionados
-                    </button>
-                    <div id="dep-revision" class="revision"></div>
+                    <p class="texto-suave">Genera un solo <b>.zip</b> con los proyectos seleccionados, cada uno en su carpeta, en <span id="pro-ruta-copias">copias/proyectos</span>. Solo se leen las carpetas de este equipo. Quedan por fuera node_modules, dist, assets, uploads, logs, galería privada y similares.</p>
                     <div class="opciones">
                         <div class="switch">
                             <label>
-                                <input id="dep-opt-respaldo" type="checkbox">
+                                <input id="pro-opt-config" type="checkbox">
                                 <span class="lever"></span>
-                                Respaldar en este equipo lo que se va a reemplazar
+                                Incluir configuración (config, config_* y .env)
                             </label>
                         </div>
                     </div>
-                    <button id="dep-btn-desplegar" class="btn btn-dorado btn-ancho oculto">
-                        <i class="material-icons left">cloud_upload</i>Desplegar
+                    <button id="pro-btn-copia" class="btn btn-dorado btn-ancho" disabled>
+                        <i class="material-icons left">archive</i>Sacar copia de los proyectos seleccionados
                     </button>
+                    <ul id="pro-resultados" class="resultados"></ul>
                 </div>
             </div>
         </section>
@@ -174,24 +170,8 @@
         </div>
     </div>
 
-    <!-- Confirmación de despliegue -->
-    <div id="modal-desplegar" class="modal">
-        <div class="modal-content">
-            <h5>Confirmar despliegue</h5>
-            <p id="dep-confirmar-resumen"></p>
-            <div id="dep-confirmar-mezcla" class="aviso-mezcla oculto"></div>
-            <ul id="dep-confirmar-lista" class="lista-confirmar"></ul>
-            <p id="dep-confirmar-pregunta" class="oculto"><b>Hay destinos de producción. ¿Quieres respaldar antes de desplegar?</b></p>
-        </div>
-        <div class="modal-footer">
-            <button class="modal-close btn-flat">Cancelar</button>
-            <button id="dep-btn-sin-respaldo" class="btn-flat oculto">No, desplegar sin respaldo</button>
-            <button id="dep-btn-confirmar" class="btn btn-dorado">Desplegar</button>
-        </div>
-    </div>
-
     <script src="vendor/materialize/materialize.min.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/despliegues.js"></script>
+    <script src="js/proyectos.js"></script>
 </body>
 </html>

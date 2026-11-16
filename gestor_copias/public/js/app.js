@@ -454,7 +454,7 @@
             marcarResultado(item.li, 'trabajando', 'Ejecutando script...');
             try {
                 const r = await api('ejecutar', { id: item.con.id, script: estado.script, lote, nombre_script: estado.nombreScript });
-                const textoCopia = copia ? '<br>Copia: ' + escapar(copia.nombre_archivo) + ' (' + tamano(copia.tamano) + ')' + textoModoCopia(copia) : '';
+                const textoCopia = copia ? '<br>Copia: ' + escapar(copia.nombre_archivo) + ' (' + tamano(copia.tamano) + ')' + textoModoCopia(copia) + botonAbrir(copia) : '';
                 if (r.ok) {
                     marcarResultado(item.li, 'ok', r.sentencias_ok + '/' + r.sentencias_total + ' sentencias · ' + r.filas_afectadas +
                         ' filas afectadas · ' + r.duracion + 's' + textoCopia);
@@ -488,7 +488,25 @@
         return texto;
     }
 
+    // Botón para abrir el Explorador con la copia seleccionada
+    function botonAbrir(r) {
+        return '<br><button class="btn-flat btn-pequeno btn-abrir-copia" data-archivo="' + escapar(r.nombre_archivo) + '">' +
+            '<i class="material-icons left">folder_open</i>Abrir carpeta</button>';
+    }
+
+    async function abrirCarpeta(e) {
+        const boton = e.target.closest('.btn-abrir-copia');
+        if (!boton) return;
+        try {
+            await api('copia/abrir', { archivo: boton.dataset.archivo });
+        } catch (err) {
+            aviso(err.message);
+        }
+    }
+
     function eventosCopias() {
+        $('resultados-copias').addEventListener('click', abrirCarpeta);
+        $('resultados-ejecucion').addEventListener('click', abrirCarpeta);
         $('btn-copias').addEventListener('click', async () => {
             const bases = seleccionadasOrdenadas();
             const lista = $('resultados-copias');
@@ -502,7 +520,7 @@
                 try {
                     const r = await api('copia', { id: item.con.id });
                     marcarResultado(item.li, 'ok', escapar(r.nombre_archivo) + ' · ' + tamano(r.tamano) + ' · ' +
-                        r.tablas + ' tablas · ' + r.duracion + 's' + textoModoCopia(r));
+                        r.tablas + ' tablas · ' + r.duracion + 's' + textoModoCopia(r) + botonAbrir(r));
                 } catch (e) {
                     errores++;
                     marcarResultado(item.li, 'error', escapar(e.message));
