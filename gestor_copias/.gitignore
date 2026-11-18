@@ -7,6 +7,7 @@ logs/
 
 # Clave secreta y contraseña de carpeta del servicio de copias del hosting
 config/copias-remotas.json
+config/logs-remotos.json
 
 # Archivos del despliegue que ya no se usa (tienen la clave del FTP): borrarlos del equipo
 config/despliegues.json

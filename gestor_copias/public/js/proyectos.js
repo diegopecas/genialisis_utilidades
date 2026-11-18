@@ -56,7 +56,7 @@
         document.querySelectorAll('.menu-opcion').forEach((boton) => {
             boton.addEventListener('click', () => {
                 document.querySelectorAll('.menu-opcion').forEach((b) => b.classList.toggle('activa', b === boton));
-                ['seccion-bd', 'seccion-proyectos'].forEach((id) => $(id).classList.toggle('oculto', id !== boton.dataset.seccion));
+                document.querySelectorAll('.menu-opcion').forEach((b) => $(b.dataset.seccion).classList.toggle('oculto', b !== boton));
                 if (boton.dataset.seccion === 'seccion-proyectos' && !estado.proyectos.length) {
                     cargarProyectos();
                 }

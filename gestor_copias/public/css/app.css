@@ -237,7 +237,7 @@ body {
 .resultado-cuerpo { flex: 1; min-width: 0; }
 .resultado-titulo { font-weight: 500; }
 .resultado-detalle { font-size: 0.85rem; color: var(--texto-suave); word-break: break-word; }
-.pro-btn-abrir, .btn-abrir-copia { margin-top: 6px; padding-left: 0; }
+.pro-btn-abrir, .btn-abrir-copia, .log-btn-abrir { margin-top: 6px; padding-left: 0; }
 .resultado pre {
     white-space: pre-wrap;
     word-break: break-word;

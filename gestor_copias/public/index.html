@@ -17,6 +17,7 @@
             <div class="menu-principal">
                 <button class="menu-opcion activa" data-seccion="seccion-bd"><i class="material-icons">dns</i>Bases de datos</button>
                 <button class="menu-opcion" data-seccion="seccion-proyectos"><i class="material-icons">folder_copy</i>Proyectos</button>
+                <button class="menu-opcion" data-seccion="seccion-logs"><i class="material-icons">receipt_long</i>Logs</button>
             </div>
         </div>
     </header>
@@ -152,6 +153,46 @@
                 </div>
             </div>
         </section>
+        <section id="seccion-logs" class="row oculto">
+            <!-- Selección de APIs -->
+            <div class="col s12 l5">
+                <div class="tarjeta">
+                    <div class="tarjeta-encabezado">
+                        <h6><i class="material-icons dorado">receipt_long</i> APIs</h6>
+                        <span id="log-contador" class="chip-suave">0 seleccionados</span>
+                    </div>
+                    <div class="input-field buscador">
+                        <i class="material-icons prefix">search</i>
+                        <input id="log-buscador" type="text" autocomplete="off">
+                        <label for="log-buscador">Buscar API o producto</label>
+                    </div>
+                    <div id="log-filtro-ambientes" class="filtro-ambientes"></div>
+                    <div class="acciones-seleccion">
+                        <button id="log-expandir" class="btn-flat btn-pequeno">Expandir todo</button>
+                        <button id="log-contraer" class="btn-flat btn-pequeno">Contraer todo</button>
+                        <button id="log-limpiar" class="btn-flat btn-pequeno">Limpiar selección</button>
+                        <button id="log-recargar" class="btn-flat btn-pequeno"><i class="material-icons left">refresh</i>Recargar</button>
+                    </div>
+                    <div id="log-arbol" class="arbol">
+                        <div class="cargando">Cargando APIs...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Descarga de logs -->
+            <div class="col s12 l7">
+                <div class="tarjeta">
+                    <div class="tarjeta-encabezado">
+                        <h6><i class="material-icons dorado">download</i> Descargar logs</h6>
+                    </div>
+                    <p class="texto-suave">Descarga un solo <b>.zip</b> con una carpeta por API: el <b>error_log</b> de la raíz y la carpeta <b>cron</b> con sus logs. Queda en <span id="log-ruta">copias/logs</span>. En el servidor no se borra nada.</p>
+                    <button id="log-btn-descargar" class="btn btn-dorado btn-ancho" disabled>
+                        <i class="material-icons left">download</i>Descargar logs de las APIs seleccionadas
+                    </button>
+                    <ul id="log-resultados" class="resultados"></ul>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Confirmación de ejecución -->
@@ -173,5 +214,6 @@
     <script src="vendor/materialize/materialize.min.js"></script>
     <script src="js/app.js"></script>
     <script src="js/proyectos.js"></script>
+    <script src="js/logs.js"></script>
 </body>
 </html>

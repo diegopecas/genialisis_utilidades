@@ -6,6 +6,7 @@ require_once __DIR__ . '/conexion.service.php';
 require_once __DIR__ . '/ejecucion.service.php';
 require_once __DIR__ . '/copias.service.php';
 require_once __DIR__ . '/proyectos.service.php';
+require_once __DIR__ . '/logs-remotos.service.php';
 
 set_time_limit(0);
 ini_set('memory_limit', '1024M');
@@ -24,6 +25,9 @@ date_default_timezone_set('America/Bogota');
  * GET  /api/proyectos   Proyectos de config/proyectos.json
  * POST /api/proyectos/copia  { ids: [producto|nombre], incluir_config: bool }  Un zip en copias/proyectos
  * POST /api/proyectos/abrir  { archivo }  Abre el Explorador con el zip seleccionado
+ * GET  /api/logs        APIs de config/logs-remotos.json (sin credenciales)
+ * POST /api/logs/descarga  { ids: [sitio] }  Un zip en copias/logs con el error_log y los logs de cron
+ * POST /api/logs/abrir  { archivo }  Abre el Explorador con el zip seleccionado
  */
 function responder(int $codigo, array $datos): void
 {
@@ -122,6 +126,20 @@ try {
         case 'POST /api/proyectos/abrir':
             $datos = cuerpo();
             responder(200, ProyectosService::abrirCarpeta(requerido($datos, 'archivo')));
+            break;
+
+        case 'GET /api/logs':
+            responder(200, ['sitios' => LogsRemotosService::listar(), 'carpeta' => LogsRemotosService::carpetaLogs()]);
+            break;
+
+        case 'POST /api/logs/descarga':
+            $datos = cuerpo();
+            responder(200, LogsRemotosService::descargar(array_map('strval', (array) ($datos['ids'] ?? []))));
+            break;
+
+        case 'POST /api/logs/abrir':
+            $datos = cuerpo();
+            responder(200, LogsRemotosService::abrirCarpeta(requerido($datos, 'archivo')));
             break;
 
         case 'POST /api/copia':
