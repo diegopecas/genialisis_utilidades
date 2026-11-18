@@ -1,6 +1,6 @@
 # Gestor de Copias
 
-Herramienta local para ejecutar scripts SQL en varias bases, sacar copias `.sql.gz` de las bases (conexiones en `config/conexiones.json`) sacar copias `.zip` de los fuentes de los proyectos de este equipo (en `copias/proyectos`) y descargar los logs de los APIs del hosting (en `copias/logs`).
+Herramienta local para ejecutar scripts SQL en varias bases, sacar copias `.sql.gz` de las bases (conexiones en `config/conexiones.json`), sacar copias `.zip` de los fuentes de los proyectos de este equipo (en `copias/proyectos`) y descargar los logs de los APIs del hosting (en `copias/logs`).
 
 ## Requisitos
 
@@ -8,7 +8,9 @@ Herramienta local para ejecutar scripts SQL en varias bases, sacar copias `.sql.
 
 ## Correr en local
 
-Desde la terminal de VS Code (Ctrl + ñ), en la carpeta de la herramienta:
+Doble clic en `abrir-gestor.vbs` (o en su acceso directo del escritorio, con el ícono `public/gestor.ico`): arranca el servidor sin consola y abre `http://localhost:8473`. Para apagarlo: `detener-gestor.vbs`.
+
+Con consola, desde la terminal de VS Code (Ctrl + ñ), en la carpeta de la herramienta:
 
 ```
 .\iniciar.bat
