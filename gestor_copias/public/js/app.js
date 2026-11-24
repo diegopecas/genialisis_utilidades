@@ -12,6 +12,8 @@
         nombreScript: '',
         sentencias: 0,
         trabajando: false,
+        // Después de ejecutar, el botón queda bloqueado hasta que se vuelva a cargar el script (evita correrlo dos veces)
+        yaEjecutado: false,
     };
 
     const $ = (id) => document.getElementById(id);
@@ -244,7 +246,10 @@
 
     function actualizarBotones() {
         const haySeleccion = estado.seleccion.size > 0;
-        $('btn-ejecutar').disabled = estado.trabajando || !haySeleccion || !estado.script || estado.sentencias === 0;
+        $('btn-ejecutar').disabled = estado.trabajando || estado.yaEjecutado || !haySeleccion || !estado.script || estado.sentencias === 0;
+        $('btn-ejecutar').innerHTML = estado.yaEjecutado
+            ? '<i class="material-icons left">done_all</i>Ya se ejecutó · vuelve a cargar el script'
+            : '<i class="material-icons left">play_arrow</i>Ejecutar en las bases seleccionadas';
         $('btn-copias').disabled = estado.trabajando || !haySeleccion;
     }
 
@@ -347,6 +352,7 @@
     function eventosEjecucion() {
         $('archivo-script').addEventListener('change', (e) => {
             const archivo = e.target.files[0];
+            estado.yaEjecutado = false;
             estado.script = null;
             estado.sentencias = 0;
             estado.nombreScript = '';
@@ -473,6 +479,9 @@
             }
         }
 
+        // Se bloquea el botón y se limpia el selector, para que el navegador detecte si se vuelve a elegir el mismo archivo
+        estado.yaEjecutado = true;
+        $('archivo-script').value = '';
         bloquear(false);
         aviso(errores ? 'Terminó con ' + errores + ' error(es). Revisa el log ' + lote + '.log' : 'Script ejecutado en ' + bases.length + ' base(s).');
     }

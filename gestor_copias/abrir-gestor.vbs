@@ -25,7 +25,36 @@ If Not Responde() Then
     End If
 End If
 
-shell.Run URL_GESTOR
+' Se abre siempre en Chrome; si no se encuentra, en el navegador por defecto
+Dim chrome
+chrome = RutaChrome()
+Dim abierto
+abierto = False
+If chrome <> "" Then
+    ' Se usa ShellExecute porque el antivirus bloquea shell.Run con el navegador y una direccion
+    On Error Resume Next
+    CreateObject("Shell.Application").ShellExecute chrome, URL_GESTOR, "", "open", 1
+    abierto = (Err.Number = 0)
+    Err.Clear
+    On Error GoTo 0
+End If
+If Not abierto Then shell.Run URL_GESTOR
+
+' Busca chrome.exe en las carpetas donde se instala normalmente
+Function RutaChrome()
+    Dim rutas, r
+    rutas = Array( _
+        shell.ExpandEnvironmentStrings("%ProgramFiles%") & "\Google\Chrome\Application\chrome.exe", _
+        shell.ExpandEnvironmentStrings("%ProgramFiles(x86)%") & "\Google\Chrome\Application\chrome.exe", _
+        shell.ExpandEnvironmentStrings("%LocalAppData%") & "\Google\Chrome\Application\chrome.exe")
+    RutaChrome = ""
+    For Each r In rutas
+        If fso.FileExists(r) Then
+            RutaChrome = r
+            Exit Function
+        End If
+    Next
+End Function
 
 ' Indica si el servidor del gestor ya contesta
 Function Responde()
